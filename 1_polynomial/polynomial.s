@@ -19,16 +19,16 @@ max_string:	.string "current max value: %d\n\n"
 
 main:	
 
-		stp		x29, x30, [sp, -16]! 		// store the FP and LP to stack in stack 
+		stp	x29, x30, [sp, -16]! 			// store the FP and LP to stack in stack 
 								// with two double space 
 		mov 	x29, sp					// move SP to the FP
 
 		mov 	x19, -10				// set x19(value of x) to value -10
 		mov 	x20, 0					// set x20(temp) to value 0
-		mov		x21, 0				// set x21(sum) to value 0
+		mov	x21, 0					// set x21(sum) to value 0
 		mov 	x22, 47					// set x22(degree-1 coefficient) to value 47
-		mov		x23, 267			// set x23(degree-2 coefficient) to value 267
-		mov		x24, -3				// set x24(degree-4 coefficient) to value -3
+		mov	x23, 267				// set x23(degree-2 coefficient) to value 267
+		mov	x24, -3					// set x24(degree-4 coefficient) to value -3
 		mov 	x25, 0					// set x25(max value) to value 0
 	
 while_loop:	
