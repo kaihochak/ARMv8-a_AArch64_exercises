@@ -114,13 +114,13 @@ pop_exit:
 /* int push(int f) */
 
 
-	.balign 4								// divisible by 4 as aligned with the word length
+	.balign 4							// divisible by 4 as aligned with the word length
 	.global push							// make sure the label is picked by the linker
 
 push:
 
 	stp	fp, lr, [sp, -32]!					// store the FP and LP to stack 
-												// -(16 + 4) & -16 = -32
+									// -(16 + 4) & -16 = -32
 	mov	fp, sp							// move the SP to the FP
 
 	str	w0, [sp, 16]						// store int f to stack		
