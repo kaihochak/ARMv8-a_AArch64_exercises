@@ -28,22 +28,22 @@ FALSE = 0
 TRUE = 1
 
 // offset for struct pyramid
-pyramid_center_x = 0 								// struct coord center in struct pyramid
+pyramid_center_x = 0 							// struct coord center in struct pyramid
 pyramid_center_y = 4	
-pyramid_base_width = 8								// struct size base in struct pyramid
+pyramid_base_width = 8							// struct size base in struct pyramid
 pyramid_base_length = 12 
-pyramid_height = 16									// int height in struct pyramid 
-pyramid_volume = 20									// int volume in struct pyramid
+pyramid_height = 16							// int height in struct pyramid 
+pyramid_volume = 20							// int volume in struct pyramid
 
-	fp .req x29										// equate x29 as frame pointer 
-	lr .req x30										// equate x30 as link register
+	fp .req x29							// equate x29 as frame pointer 
+	lr .req x30							// equate x30 as link register
 
-khafre_size = 24 									// coord-8, size-8, height-4, volume-4  
+khafre_size = 24 							// coord-8, size-8, height-4, volume-4  
 cheops_size = 24
 alloc = -(16 + khafre_size + cheops_size) & -16
 dealloc = -alloc 
-khafre_s = 16										// offset for khafre
-cheops_s = 40										// offset for cheops	
+khafre_s = 16								// offset for khafre
+cheops_s = 40								// offset for cheops	
 
 printFmt1:	.string "Pyramid "
 printFmt2: 	.string "\tCenter = (%d, %d)\n"
@@ -55,28 +55,28 @@ printFmt7:	.string "\nNew pyramid values:\n"
 print_khafre:	.string "khafre\n"
 print_cheops:	.string "cheops\n"
 
-	.balign 4										// are divisible by 4 
-	.global main									// pseudo op that sets the start label to main
+	.balign 4							// are divisible by 4 
+	.global main							// pseudo op that sets the start label to main
 
-define(p_base_r, x9)								// for storing address of passed pyramid
-define(pyramid1_r, x10)								// for storing address of pyramid1
-define(pyramid2_r, x11)								// for storing address of pyramid2
+define(p_base_r, x9)							// for storing address of passed pyramid
+define(pyramid1_r, x10)							// for storing address of pyramid1
+define(pyramid2_r, x11)							// for storing address of pyramid2
 define(result_r, w12)			
 define(factor_r, w13)
 define(deltaX_r, w14)
 define(deltaY_r, w15)
 
-p_size = 24			// coord-8, size-8, height-4, volume-4  
+p_size = 24								// coord-8, size-8, height-4, volume-4  
 struct_alloc = -(16 + p_size) & -16	
 struct_dealloc = -struct_alloc
 p_s = 16
 
 newPyramid:
 
-	stp		fp, lr, [sp, struct_alloc]!				// allocate frame record on stack
-	mov		fp, sp									// set fp
+	stp		fp, lr, [sp, struct_alloc]!			// allocate frame record on stack
+	mov		fp, sp						// set fp
 
-	add		p_base_r, fp, p_s  						// calculate address of p_base 
+	add		p_base_r, fp, p_s  				// calculate address of p_base 
 
 	// initialize variables and store on to stack
 
@@ -91,20 +91,20 @@ newPyramid:
 	
 	// for p.volume
 	// just follow the original code
-	ldr		w10, [p_base_r, pyramid_base_width] 	// p_base_width
-	ldr		w11, [p_base_r, pyramid_base_length]	// p_base_length
+	ldr		w10, [p_base_r, pyramid_base_width] 		// p_base_width
+	ldr		w11, [p_base_r, pyramid_base_length]		// p_base_length
 	ldr		w12, [p_base_r, pyramid_height]			// p_height 
-	mul		w13, w10, w11							// width * length 
-	mul		w13, w13, w12							// width * length * height
-	mov 	w14, 3		
-	sdiv	w13, w13, w14							// product of three variables / 3
-	str 	w13, [p_base_r, pyramid_volume]			// p_volume
+	mul		w13, w10, w11					// width * length 
+	mul		w13, w13, w12					// width * length * height
+	mov 		w14, 3		
+	sdiv		w13, w13, w14					// product of three variables / 3
+	str 		w13, [p_base_r, pyramid_volume]			// p_volume
 
 	// return struct to caller
 
 	// for p.center.x 
 	ldr		w15, [p_base_r, pyramid_center_x]
-	str 	x15, [x8, pyramid_center_x]
+	str 		x15, [x8, pyramid_center_x]
 
 	// for p.center.y
 	ldr		w15, [p_base_r, pyramid_center_y]
@@ -126,7 +126,7 @@ newPyramid:
 	ldr		w15, [p_base_r, pyramid_volume]
 	str		x15, [x8, pyramid_volume]
 
-	ldp		fp, lr, [sp], struct_dealloc		// restore frame record
+	ldp		fp, lr, [sp], struct_dealloc				// restore frame record
 	ret
 
 relocate:
@@ -135,22 +135,22 @@ relocate:
 	mov		fp, sp	
 	
 	str		x8, [sp, 16]						// store passed struct's address on the stack
-	str 	w0, [sp, 16+8]						// store passed int deltaX on the stack
+	str 		w0, [sp, 16+8]						// store passed int deltaX on the stack
 	str		w1, [sp, 16+8+4]					// store passed int deltaY on the stack
 
 	ldr		p_base_r, [sp, 16]					// load back from stack to register
 	ldr		deltaX_r, [sp, 16+8]	
-	ldr 	deltaY_r, [sp, 16+8+4]
+	ldr 		deltaY_r, [sp, 16+8+4]
 
 	// p->center.x += deltaX
-	ldr 	w11, [p_base_r, pyramid_center_x]
+	ldr 		w11, [p_base_r, pyramid_center_x]
 	add		w11, w11, deltaX_r
-	str 	w11, [p_base_r, pyramid_center_x]	
+	str 		w11, [p_base_r, pyramid_center_x]	
 
 	// p->center.y += deltaY
-	ldr 	w11, [p_base_r, pyramid_center_y]
+	ldr 		w11, [p_base_r, pyramid_center_y]
 	add		w11, w11, deltaY_r
-	str 	w11, [p_base_r, pyramid_center_y]	
+	str 		w11, [p_base_r, pyramid_center_y]	
 
 	// return updated values to caller
 
@@ -166,18 +166,18 @@ relocate:
 expand:
 
 	stp		fp, lr, [sp, -32]!					// -(16 + 8 + 4) & -16 = -32
-	mov		fp, sp								// 8 for struct, 4 for int factor
+	mov		fp, sp							// 8 for struct, 4 for int factor
 	
 	str		x8, [sp, 16]						// store passed struct's address on the stack
-	str 	w0, [sp, 16+8]						// store passed int factor on the stack
+	str 		w0, [sp, 16+8]						// store passed int factor on the stack
 
 	ldr		p_base_r, [sp, 16]					// load back from stack to register
 	ldr		factor_r, [sp, 16+8]
 
 	// p->base.width *= factor
-	ldr 	w11, [p_base_r, pyramid_base_width]
+	ldr 		w11, [p_base_r, pyramid_base_width]
 	mul		w11, w11, factor_r
-	str 	w11, [p_base_r, pyramid_base_width]	
+	str 		w11, [p_base_r, pyramid_base_width]	
 
 	// p->base.length *= factor
 	ldr		w11, [p_base_r, pyramid_base_length]
@@ -195,7 +195,7 @@ expand:
 	mul		w11, w11, w14
 	mul		w11, w11, w15
 	mov		w14, 3
-	sdiv	w11, w11, w14
+	sdiv		w11, w11, w14
 	str		w11, [p_base_r, pyramid_volume]	
 
 	// return updated values to caller
@@ -222,28 +222,28 @@ expand:
 printPyramid:
 
 	stp		fp, lr, [sp, -32]! 					// -(16 + 8) & -16) = -32 
-												// an extra 8 bytes for storing x8
+										// an extra 8 bytes for storing x8
 	mov		fp, sp
 
 	str		x8, [sp, 16]						// store passed struct's address on the stack
 
 	// print center_x and center_y
-	ldr 	x0, =printFmt2
+	ldr 		x0, =printFmt2
 	ldr		x1, [x8, pyramid_center_x]
 	ldr		x2, [x8, pyramid_center_y]
 	bl 		printf
 
 	// print base_width and base_length
-	ldr 	x8, [sp, 16]						// load address back to x8
+	ldr 		x8, [sp, 16]						// load address back to x8
 	ldr		x0, =printFmt3	
 	ldr		x1, [x8, pyramid_base_width]
-	ldr 	x2, [x8, pyramid_base_length]
+	ldr 		x2, [x8, pyramid_base_length]
 	bl		printf	
 
 	// print height
-	ldr 	x8, [sp, 16]
-	ldr 	x0, =printFmt4
-	ldr 	x1, [x8, pyramid_height]
+	ldr 		x8, [sp, 16]
+	ldr 		x0, =printFmt4
+	ldr 		x1, [x8, pyramid_height]
 	bl		printf
 	
 	// print volume
@@ -262,8 +262,8 @@ equalSize:
 
 	str		x0, [sp, 16]						// store passed structs' addresses on stack
 	str		x1, [sp, 24]
-	ldr		pyramid1_r, [sp, 16]				// load pased structs' addresses 
-	ldr 	pyramid2_r, [sp, 24]		
+	ldr		pyramid1_r, [sp, 16]					// load pased structs' addresses 
+	ldr 		pyramid2_r, [sp, 24]		
 
 	mov		result_r, FALSE    					// result = FALSE
 
@@ -271,19 +271,19 @@ equalSize:
 	ldr		w13, [pyramid1_r, pyramid_base_width]
 	ldr		w14, [pyramid2_r, pyramid_base_width]
 	cmp		w13, w14
-	b.ne	returnEqual
+	b.ne		returnEqual
 
 	// if (p1->base.length == p2->base.length)
 	ldr		w13, [pyramid1_r, pyramid_base_length]
 	ldr		w14, [pyramid2_r, pyramid_base_length]
 	cmp		w13, w14
-	b.ne	returnEqual
+	b.ne		returnEqual
 
 	// if (p1->base.height == p2->base.height)
 	ldr		w13, [pyramid1_r, pyramid_height]
 	ldr		w14, [pyramid2_r, pyramid_height]
 	cmp		w13, w14
-	b.ne	returnEqual
+	b.ne		returnEqual
 
 	mov		result_r, TRUE						// result = TRUE
 
@@ -294,8 +294,8 @@ returnEqual:
 
 main:
 
-	stp		fp, lr, [sp, alloc]!				// allocate frame record on stack
-	mov		fp, sp								// set fp
+	stp		fp, lr, [sp, alloc]!					// allocate frame record on stack
+	mov		fp, sp							// set fp
 
 	// khafre = newPyramid(10, 10, 9)
 	add		x8, fp, khafre_s					// calculate address of khafre
@@ -312,7 +312,7 @@ main:
 	bl		newPyramid
 
 	// print initial values
-	ldr 	x0, =printFmt6
+	ldr 		x0, =printFmt6
 	bl 		printf
 
 	// passing khafre
@@ -332,13 +332,13 @@ main:
 	bl		printPyramid			
 
 	// pass khafre and cheops in equal size	 
-	add 	x0, fp, khafre_s
+	add 		x0, fp, khafre_s
 	add		x1, fp, cheops_s
 	bl		equalSize
 
 	// if (!equalSize(&khafre, &cheops))
 	cmp		result_r, FALSE
-	b.ne	printNew
+	b.ne		printNew
 	
 	// expand(&cheops, 9)
 	add		x8, fp, cheops_s
@@ -346,21 +346,21 @@ main:
 	bl		expand
 
 	// relocate(&cheops, 27, -10)	
-	add 	x8, fp, cheops_s
+	add 		x8, fp, cheops_s
 	mov		w0, 27
 	mov		w1, -10
 	bl 		relocate
 
 	// relocate(&khafre, -23, 17)	
-	add 	x8, fp, khafre_s
+	add 		x8, fp, khafre_s
 	mov		w0, -23
 	mov		w1, 17
 	bl 		relocate
 
 printNew:
 
-	ldr	x0, =printFmt7
-	bl	printf
+	ldr		x0, =printFmt7
+	bl		printf
 
 	// passing khafre
 	ldr		x0, =printFmt1
@@ -380,5 +380,5 @@ printNew:
 
 exit:
 
-	ldp 	fp, lr, [sp], dealloc				// restore frame record
-	ret 										// return to the OSi
+	ldp 		fp, lr, [sp], dealloc					// restore frame record
+	ret 									// return to the OSi
