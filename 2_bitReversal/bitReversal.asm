@@ -1,7 +1,7 @@
 // Title:    	Bit Reversal
 // 
-// Author:		Kai Ho Chak	
-// Date:		Oct 5, 2021
+// Author:	Kai Ho Chak	
+// Date:	Oct 5, 2021
 // 
 // Description: 
 // 
